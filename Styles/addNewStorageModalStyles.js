@@ -31,9 +31,10 @@ export const addNewStorageModalStyles = StyleSheet.create({
     padding: 5,
     width: "100%",
     height: 40,
-    borderRadius: 10,
+    borderRadius: 5,
     borderColor: "black",
     borderWidth: 1,
+    backgroundColor: 'whitesmoke'
   },
   buttonContainer: {
     position: "absolute",
