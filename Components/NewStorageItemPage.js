@@ -7,7 +7,7 @@ import {
   Pressable,
   StyleSheet,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Store } from "../Store";
 import { Calendar, generateCalendar } from "./Calendar";
@@ -24,60 +24,75 @@ export const NewStorageItemPage = ({ navigation }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [selectedDay, setSelectedDay] = useState(moment().format("YYYY-MMM-DD"));
 
-  const calendar = useMemo(() => {
-    return generateCalendar(selectedDay);
-  }, [selectedDay]);
-
   const handleDayPress = (pressedDay) => {
     setSelectedDay(pressedDay.format("YYYY-MMM-DD"));
   };
-  
+
   const handleInputBlur = () => {
-    setFocused('');
+    setFocused("");
     Keyboard.dismiss();
-  }
-  
+  };
+
   const handleFocus = (type) => {
     setFocused(type);
-  }
-  
+  };
+
   const handleShowButtonPress = () => {
     setShowCalendar(!showCalendar);
-  }
-  
+  };
+
   const renderInputStyle = (type) => {
-    return focused === type ? newStorageItemPageStyles.focusedInput : newStorageItemPageStyles.input
-  }
-  
+    return focused === type ? newStorageItemPageStyles.focusedInput : newStorageItemPageStyles.input;
+  };
+
   const renderSelectedDay = () => {
     const momentDate = moment(selectedDay, "YYYY-MMM-DD");
-    return momentDate.format('MMMM Do, YYYY');
-  }
+    return momentDate.format("MMMM Do, YYYY");
+  };
+
+  const RenderedCalendar = useMemo(() => {
+    const calendar = generateCalendar(selectedDay);
+    return <Calendar selectedDay={selectedDay} calendarMatrix={calendar} handleDayPress={handleDayPress} />;
+  }, [selectedDay]);
 
   return (
     <TouchableWithoutFeedback onPress={handleInputBlur} accessible={false}>
       <SafeAreaView style={defaultStyles.container}>
-          <Text style={defaultStyles.pageTitle}>New Item</Text>
-          <View style={newStorageItemPageStyles.content}>
-            <View style={newStorageItemPageStyles.inputContainer}>
-              <Text style={newStorageItemPageStyles.inputLabel}>Item Name</Text>
-              <TextInput style={renderInputStyle('name')} autoFocus onFocus={() => handleFocus('name')} onBlur={handleInputBlur} onChangeText={setNameValue} value={nameValue} placeholder="Enter a name here..." />
-            </View>
-            <View style={newStorageItemPageStyles.inputContainer}>
-              <Text style={newStorageItemPageStyles.inputLabel}>Item Description</Text>
-              <TextInput style={renderInputStyle('desc')} onFocus={() => handleFocus('desc')} onBlur={handleInputBlur} onChangeText={setDesc} value={desc} placeholder="Enter a description..." />
-            </View>
-            <View style={newStorageItemPageStyles.expiryDateContainer}>
-              <View>
-                <Text style={newStorageItemPageStyles.inputLabel}>Expiry Date</Text>
-                <Text style={defaultStyles.text}>{renderSelectedDay()}</Text>
-              </View>
-              <Pressable style={newStorageItemPageStyles.button} onPress={handleShowButtonPress}>
-                <Text style={defaultStyles.text}>{showCalendar ? 'Hide Calendar' : 'Show Calendar'}</Text>
-              </Pressable>
-            </View>
-            {showCalendar && <Calendar selectedDay={selectedDay} calendarMatrix={calendar} handleDayPress={handleDayPress} />}
+        <Text style={defaultStyles.pageTitle}>New Item</Text>
+        <View style={newStorageItemPageStyles.content}>
+          <View style={newStorageItemPageStyles.inputContainer}>
+            <Text style={newStorageItemPageStyles.inputLabel}>Item Name</Text>
+            <TextInput
+              style={renderInputStyle("name")}
+              onFocus={() => handleFocus("name")}
+              onBlur={handleInputBlur}
+              onChangeText={setNameValue}
+              value={nameValue}
+              placeholder="Enter a name here..."
+            />
           </View>
+          <View style={newStorageItemPageStyles.inputContainer}>
+            <Text style={newStorageItemPageStyles.inputLabel}>Item Description</Text>
+            <TextInput
+              style={renderInputStyle("desc")}
+              onFocus={() => handleFocus("desc")}
+              onBlur={handleInputBlur}
+              onChangeText={setDesc}
+              value={desc}
+              placeholder="Enter a description..."
+            />
+          </View>
+          <View style={newStorageItemPageStyles.expiryDateContainer}>
+            <View>
+              <Text style={newStorageItemPageStyles.inputLabel}>Expiry Date</Text>
+              <Text style={defaultStyles.text}>{renderSelectedDay()}</Text>
+            </View>
+            <Pressable style={newStorageItemPageStyles.button} onPress={handleShowButtonPress}>
+              <Text style={defaultStyles.text}>{showCalendar ? "Hide Calendar" : "Show Calendar"}</Text>
+            </Pressable>
+          </View>
+          {showCalendar && RenderedCalendar}
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

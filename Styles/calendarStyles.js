@@ -30,7 +30,7 @@ export const calendarStyles = {
     flex: 1,
     borderWidth: 1,
     borderColor: 'blue',
-    backgroundColor: 'dodgerblue'
+    backgroundColor: '#AFEEEE'
   },
   day: {
     flex: 1,

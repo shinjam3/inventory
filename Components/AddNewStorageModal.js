@@ -36,7 +36,6 @@ export const AddNewStorageModal = ({ isVisible, submitName, closeModal }) => {
           <Text style={addNewStorageModalStyles.title}>New Storage Unit</Text>
           <Text style={addNewStorageModalStyles.inputLabel}>Storage Unit Name</Text>
           <TextInput
-            autoFocus
             style={addNewStorageModalStyles.input}
             onChangeText={setName}
             value={name}

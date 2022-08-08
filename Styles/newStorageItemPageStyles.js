@@ -39,7 +39,6 @@ export const newStorageItemPageStyles = StyleSheet.create({
     },
     shadowOpacity: 0.30,
     shadowRadius: 4.65,
-
     elevation: 8,
   },
   expiryDateContainer: {
