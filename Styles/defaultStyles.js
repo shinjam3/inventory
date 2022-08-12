@@ -17,6 +17,7 @@ export const defaultStyles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -26,5 +27,9 @@ export const defaultStyles = StyleSheet.create({
   },
   text: {
     fontSize: 16
-  }
+  },
+  boldedText: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
 });

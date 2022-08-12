@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView, StatusBar, View, Text, Pressable } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Store } from "../Store";
@@ -7,10 +7,14 @@ import { defaultStyles } from "../Styles/defaultStyles";
 import { storageUnitPageStyles } from "../Styles/storageUnitPageStyles";
 
 export const StorageUnitPage = ({ navigation }) => {
-  const { storageUnit } = useContext(Store);
-  const { id, name, items } = storageUnit;
-  const [tempItems, setTempItems] = useState(items);
+  const { currentUnit } = useContext(Store);
+  const [items, setItems] = useState(currentUnit.items);
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  // todo: fix unit page not rendering new item immediately
+  useEffect(() => {
+    setItems(currentUnit.items);
+  }, [currentUnit])
 
   const handleOption = (option) => {
     switch (option) {
@@ -18,7 +22,7 @@ export const StorageUnitPage = ({ navigation }) => {
         navigation.navigate("HomePage");
         break;
       case "add":
-        navigation.navigate("NewStorageItemPage", {storageUnit});;
+        navigation.navigate("NewStorageItemPage");;
         break;
       case "delete":
         break;
@@ -29,7 +33,7 @@ export const StorageUnitPage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={defaultStyles.container}>
-      <Text style={defaultStyles.pageTitle}>{name}</Text>
+      <Text style={defaultStyles.pageTitle}>{currentUnit.name}</Text>
       <View style={storageUnitPageStyles.toolbar}>
         <Pressable
           style={storageUnitPageStyles.toolbarOption}
@@ -52,8 +56,14 @@ export const StorageUnitPage = ({ navigation }) => {
       </View>
 
       <View style={defaultStyles.contentContainer}>
-        {tempItems.length ? (
-          <View></View>
+        {items.length ? (
+          items.map(item => (
+            <View key={item.id}>
+              <Text>{item.name}</Text>
+              <Text>{item.desc}</Text>
+              <Text>{item.expiryDate}</Text>
+            </View>
+          ))
         ) : (
           <Text style={storageUnitPageStyles.noItems}>No items...</Text>
         )}

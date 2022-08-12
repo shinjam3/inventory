@@ -1,24 +1,34 @@
 import { StyleSheet } from "react-native";
 
 export const calendarStyles = {
+  calendar: {
+    width: 340,
+    height: 300,
+    borderWidth: 1,
+    borderColor: 'black',
+  },
+  monthContainer: {
+    borderWidth: 1,
+    borderColor: 'black',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    padding: 20
+  },
+  month: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    width: 180,
+    textAlign: 'center',
+  },
   weekNames: {
     flexDirection: 'row',
     width: '100%',
-    borderWidth: 1,
-    borderColor: 'black',
   },
   weekNameContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  },
-  weekName: {
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-  calendar: {
-    width: 340,
-    height: 300,
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: 'black',
   },

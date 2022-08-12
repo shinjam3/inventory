@@ -1,38 +1,58 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Pressable } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
 import moment from "moment";
 import { calendarStyles } from "../Styles/calendarStyles";
+import { defaultStyles } from '../Styles/defaultStyles';
 
 export const Calendar = ({ selectedDay, calendarMatrix, handleDayPress }) => {
-  console.log("called");
+  const newDate = moment(selectedDay, "YYYY-MMM-DD");
+  
   const renderDayStyle = (currentDay) => {
-    const momentDay = moment(selectedDay, "YYYY-MMM-DD");
-    return momentDay.isSame(currentDay, "day") ? calendarStyles.selectedDay : calendarStyles.day;
+    return newDate.isSame(currentDay, "day") ? calendarStyles.selectedDay : calendarStyles.day;
   };
+
+  const handleMonthChange = (type) => {
+    switch (type) {
+      case 'prev':
+        handleDayPress(newDate.clone().subtract(1, 'months'));
+        break;
+      case 'next':
+        handleDayPress(newDate.clone().add(1, 'months'));
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <View style={calendarStyles.calendar}>
+      <View style={calendarStyles.monthContainer}>
+        <AntDesign name="left" size={24} color="black" onPress={() => handleMonthChange('prev')} />
+        <Text style={calendarStyles.month}>{newDate.format("MMMM YYYY")}</Text>
+        <AntDesign name="right" size={24} color="black" onPress={() => handleMonthChange('next')} />
+      </View>
       <View style={calendarStyles.weekNames}>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Sun</Text>
+          <Text style={defaultStyles.boldedText}>Sun</Text>
         </View>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Mon</Text>
+          <Text style={defaultStyles.boldedText}>Mon</Text>
         </View>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Tue</Text>
+          <Text style={defaultStyles.boldedText}>Tue</Text>
         </View>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Wed</Text>
+          <Text style={defaultStyles.boldedText}>Wed</Text>
         </View>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Thur</Text>
+          <Text style={defaultStyles.boldedText}>Thur</Text>
         </View>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Fri</Text>
+          <Text style={defaultStyles.boldedText}>Fri</Text>
         </View>
         <View style={calendarStyles.weekNameContainer}>
-          <Text style={calendarStyles.weekName}>Sat</Text>
+          <Text style={defaultStyles.boldedText}>Sat</Text>
         </View>
       </View>
       {calendarMatrix.map((calendarWeek, weekIdx) => (

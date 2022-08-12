@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import { Store } from "../Store";
 
 import { StorageUnitItem, RenderStorageUnits } from "./StorageUnitItem";
 import { AddNewStorageModal } from "./AddNewStorageModal";
@@ -25,10 +26,12 @@ import { defaultStyles } from "../Styles/defaultStyles";
 import { homePageStyles, addModalStyles } from "../Styles/homePageStyles";
 
 export const HomePage = ({ navigation }) => {
-  const [storageUnits, setStorageUnits] = useState([]);
+  const {storageUnits, setStorageUnits} = useContext(Store);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState(undefined);
+  
+  console.log(storageUnits);
 
   const handleSubmitName = (submittedName) => {
     setShowAddModal(false);

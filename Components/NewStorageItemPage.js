@@ -9,16 +9,20 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
 import { Store } from "../Store";
-import { Calendar, generateCalendar } from "./Calendar";
 import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
+
+import { Calendar, generateCalendar } from "./Calendar";
+import { CustomModal } from './CustomModal';
+
 import { defaultStyles } from "../Styles/defaultStyles";
 import { newStorageItemPageStyles } from "../Styles/newStorageItemPageStyles";
 
 export const NewStorageItemPage = ({ navigation }) => {
-  const { storageUnit, setStorageUnit } = useContext(Store);
-  const { name } = storageUnit;
-  const [nameValue, setNameValue] = useState("");
+  const { addNewItem } = useContext(Store);
+  const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [focused, setFocused] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
@@ -44,12 +48,27 @@ export const NewStorageItemPage = ({ navigation }) => {
   const renderInputStyle = (type) => {
     return focused === type ? newStorageItemPageStyles.focusedInput : newStorageItemPageStyles.input;
   };
+  
+  const handleSave = () => {
+    const newItem = {
+      id: uuidv4(),
+      name,
+      desc,
+      expiryDate: selectedDay
+    };
+    addNewItem(newItem);
+    navigation.goBack();
+  }
+  
+  const handleReset = () => {
+    
+  }
 
   const renderSelectedDay = () => {
     const momentDate = moment(selectedDay, "YYYY-MMM-DD");
     return momentDate.format("MMMM Do, YYYY");
   };
-
+  
   const RenderedCalendar = useMemo(() => {
     const calendar = generateCalendar(selectedDay);
     return <Calendar selectedDay={selectedDay} calendarMatrix={calendar} handleDayPress={handleDayPress} />;
@@ -57,7 +76,7 @@ export const NewStorageItemPage = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={handleInputBlur} accessible={false}>
-      <SafeAreaView style={defaultStyles.container}>
+      <SafeAreaView style={defaultStyles.contentContainer}>
         <Text style={defaultStyles.pageTitle}>New Item</Text>
         <View style={newStorageItemPageStyles.content}>
           <View style={newStorageItemPageStyles.inputContainer}>
@@ -66,8 +85,8 @@ export const NewStorageItemPage = ({ navigation }) => {
               style={renderInputStyle("name")}
               onFocus={() => handleFocus("name")}
               onBlur={handleInputBlur}
-              onChangeText={setNameValue}
-              value={nameValue}
+              onChangeText={setName}
+              value={name}
               placeholder="Enter a name here..."
             />
           </View>
@@ -83,15 +102,31 @@ export const NewStorageItemPage = ({ navigation }) => {
             />
           </View>
           <View style={newStorageItemPageStyles.expiryDateContainer}>
-            <View>
-              <Text style={newStorageItemPageStyles.inputLabel}>Expiry Date</Text>
-              <Text style={defaultStyles.text}>{renderSelectedDay()}</Text>
-            </View>
-            <Pressable style={newStorageItemPageStyles.button} onPress={handleShowButtonPress}>
-              <Text style={defaultStyles.text}>{showCalendar ? "Hide Calendar" : "Show Calendar"}</Text>
-            </Pressable>
+              <View>
+                <Text style={newStorageItemPageStyles.inputLabel}>Expiry Date</Text>
+                <Text style={defaultStyles.text}>{renderSelectedDay()}</Text>
+              </View>
+              <Pressable style={newStorageItemPageStyles.button} onPress={handleShowButtonPress}>
+                <Text style={defaultStyles.text}>Show Calendar</Text>
+              </Pressable>
           </View>
-          {showCalendar && RenderedCalendar}
+          <View style={newStorageItemPageStyles.actionsContainer}>
+              <Pressable style={newStorageItemPageStyles.actionButton} onPress={handleSave}>
+                <Text style={defaultStyles.text}>Save</Text>
+              </Pressable>
+              <Pressable style={newStorageItemPageStyles.actionButton} onPress={handleReset}>
+                <Text style={defaultStyles.text}>Reset</Text>
+              </Pressable>
+          </View>
+          <CustomModal
+            isVisible={showCalendar}
+            closeModal={() => setShowCalendar(false)}
+          >
+            <View style={newStorageItemPageStyles.closeModalButton}>
+              <AntDesign name="close" size={30} color="black" onPress={() => setShowCalendar(false)} />
+            </View>
+            {RenderedCalendar}
+          </CustomModal>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

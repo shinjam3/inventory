@@ -8,14 +8,14 @@ import { storageUnitItemStyles } from "../Styles/storageUnitItemStyles";
 // TODO: GET STORAGE UNIT DATA FROM API BY CALLING WITH STORAGE UNIT ID
 
 export const StorageUnitItem = ({ data, toStorageUnitPage, openOptions }) => {
-  const { setStorageUnit } = useContext(Store);
+  const { setCurrentUnit } = useContext(Store);
   
   const handlePressIn = () => {
     // todo highlight selected item
   }
   
   const handlePress = () => {
-    setStorageUnit(data);
+    setCurrentUnit(data);
     toStorageUnitPage();
   };
   

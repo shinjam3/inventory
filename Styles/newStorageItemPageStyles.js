@@ -55,5 +55,26 @@ export const newStorageItemPageStyles = StyleSheet.create({
     width: 140,
     height: 50,
     borderRadius: 10,
-  }
+  },
+  closeModalButton: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'gainsboro',
+    width: 100,
+    height: 50,
+    borderRadius: 10,
+    marginLeft: 20,
+    marginRight: 20
+  },
 });

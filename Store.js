@@ -2,7 +2,8 @@ import React, { useReducer, createContext } from 'react';
 import { Reducer } from './Reducers/Reducer';
 
 const initialState = {
-  storageUnit: undefined,
+  storageUnits: [],
+  currentUnit: undefined,
   barcodeScanned: true,
   showScanner: false
 };
@@ -13,8 +14,16 @@ export const Provider = ({children}) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   
   //actions
-  const setStorageUnit = (storageUnit) => {
-    dispatch({type: 'SET_STORAGE_UNIT', payload: storageUnit})
+  const setStorageUnits = (storageUnits) => {
+    dispatch({type: 'SET_STORAGE_UNITS', payload: storageUnits})
+  }
+  
+  const setCurrentUnit = (currentUnit) => {
+    dispatch({type: 'SET_CURRENT_UNIT', payload: currentUnit})
+  }
+  
+  const addNewItem = (newItem) => {
+    dispatch({type: 'ADD_NEW_ITEM', payload: newItem})
   }
   
   const setBarcodeScanned = (bool) => {
@@ -28,10 +37,13 @@ export const Provider = ({children}) => {
   return (
     <Store.Provider
       value={{
-        storageUnit: state.storageUnit,
+        storageUnits: state.storageUnits,
+        currentUnit: state.currentUnit,
         barcodeScanned: state.barcodeScanned,
         showScanner: state.showScanner,
-        setStorageUnit,
+        setStorageUnits,
+        setCurrentUnit,
+        addNewItem,
         setBarcodeScanned,
         setShowScanner
       }}

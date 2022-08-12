@@ -25,7 +25,7 @@ export const StorageUnitOptions = ({
   deleteStorageUnit,
   closeOptions,
 }) => {
-  const { setStorageUnit } = useContext(Store);
+  const { setCurrentUnit } = useContext(Store);
   const { id, name, items } = unitData;
   const [renameSelected, setRenameSelected] = useState(false);
   const [newName, setNewName] = useState("");
@@ -87,7 +87,7 @@ export const StorageUnitOptions = ({
   const handleOptionSelect = (option) => {
     switch (option) {
       case "open":
-        setStorageUnit(unitData);
+        setCurrentUnit(unitData);
         handleCloseOptions();
         toStorageUnitPage();
         break;
