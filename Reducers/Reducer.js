@@ -10,17 +10,6 @@ export const Reducer = (state, action) => {
         ...state,
         currentUnit: action.payload
       }
-    case 'ADD_NEW_ITEM':
-      // todo: make this more efficient
-      const updatedUnit = JSON.parse(JSON.stringify(state.currentUnit));
-      updatedUnit.items.push(action.payload);
-      const updatedItems = state.storageUnits.map(unit => {
-        return unit.id === updatedUnit.id ? updatedUnit : unit
-      });
-      return {
-        ...state,
-        storageUnits: updatedItems
-      }
     case 'SET_BARCODE_SCANNED':
       return {
         ...state,

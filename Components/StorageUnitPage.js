@@ -1,7 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
-import { SafeAreaView, StatusBar, View, Text, Pressable } from "react-native";
+import { SafeAreaView, StatusBar, View, Text, Pressable, FlatList } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Store } from "../Store";
+
+import {StorageUnitItem} from './StorageUnitItem';
 
 import { defaultStyles } from "../Styles/defaultStyles";
 import { storageUnitPageStyles } from "../Styles/storageUnitPageStyles";
@@ -10,11 +12,10 @@ export const StorageUnitPage = ({ navigation }) => {
   const { currentUnit } = useContext(Store);
   const [items, setItems] = useState(currentUnit.items);
   const [showAddModal, setShowAddModal] = useState(false);
-  
-  // todo: fix unit page not rendering new item immediately
+
   useEffect(() => {
     setItems(currentUnit.items);
-  }, [currentUnit])
+  }, [currentUnit]);
 
   const handleOption = (option) => {
     switch (option) {
@@ -57,18 +58,25 @@ export const StorageUnitPage = ({ navigation }) => {
 
       <View style={defaultStyles.contentContainer}>
         {items.length ? (
-          items.map(item => (
-            <View key={item.id}>
-              <Text>{item.name}</Text>
-              <Text>{item.desc}</Text>
-              <Text>{item.expiryDate}</Text>
-            </View>
-          ))
+          <View style={storageUnitPageStyles.flatListContainer}>
+            <FlatList
+              data={items}
+              renderItem={StorageUnitItem}
+              keyExtractor={item => item.id}
+            />
+          </View>
         ) : (
           <Text style={storageUnitPageStyles.noItems}>No items...</Text>
+          //<StorageUnitItem item={{name: 'n', desc: 'd', expiryDate: 'today'}} />
         )}
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
 };
+
+/*
+items.map(item => (
+            <StorageUnitItem key={item.id} data={item} />
+          ))
+*/

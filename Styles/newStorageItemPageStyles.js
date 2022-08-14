@@ -67,6 +67,10 @@ export const newStorageItemPageStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  disabledText: {
+    fontSize: 16,
+    color: 'gray'
+  },
   actionButton: {
     justifyContent: 'center',
     alignItems: 'center',

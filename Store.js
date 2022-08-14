@@ -22,10 +22,6 @@ export const Provider = ({children}) => {
     dispatch({type: 'SET_CURRENT_UNIT', payload: currentUnit})
   }
   
-  const addNewItem = (newItem) => {
-    dispatch({type: 'ADD_NEW_ITEM', payload: newItem})
-  }
-  
   const setBarcodeScanned = (bool) => {
     dispatch({type: 'SET_BARCODE_SCANNED', payload: bool});
   }
@@ -43,7 +39,7 @@ export const Provider = ({children}) => {
         showScanner: state.showScanner,
         setStorageUnits,
         setCurrentUnit,
-        addNewItem,
+        //addNewItem,
         setBarcodeScanned,
         setShowScanner
       }}

@@ -18,7 +18,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { Store } from "../Store";
 
-import { StorageUnitItem, RenderStorageUnits } from "./StorageUnitItem";
+import { StorageUnitListItem, RenderStorageUnits } from "./StorageUnitListItem";
 import { AddNewStorageModal } from "./AddNewStorageModal";
 import { StorageUnitOptions } from "./StorageUnitOptions";
 
@@ -30,8 +30,6 @@ export const HomePage = ({ navigation }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState(undefined);
-  
-  console.log(storageUnits);
 
   const handleSubmitName = (submittedName) => {
     setShowAddModal(false);
@@ -77,7 +75,7 @@ export const HomePage = ({ navigation }) => {
               <FlatList
                 data={storageUnits}
                 renderItem={({ item }) => (
-                  <StorageUnitItem
+                  <StorageUnitListItem
                     data={item}
                     toStorageUnitPage={handleToStorageUnitPage}
                     openOptions={handleOpenOptions}

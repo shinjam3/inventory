@@ -21,7 +21,7 @@ import { defaultStyles } from "../Styles/defaultStyles";
 import { newStorageItemPageStyles } from "../Styles/newStorageItemPageStyles";
 
 export const NewStorageItemPage = ({ navigation }) => {
-  const { addNewItem } = useContext(Store);
+  const { storageUnits, setStorageUnits, currentUnit, setCurrentUnit } = useContext(Store);
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [focused, setFocused] = useState("");
@@ -56,18 +56,34 @@ export const NewStorageItemPage = ({ navigation }) => {
       desc,
       expiryDate: selectedDay
     };
-    addNewItem(newItem);
+    const updatedUnit = JSON.parse(JSON.stringify(currentUnit));
+    updatedUnit.items.push(newItem);
+    const updatedUnits = storageUnits.map(unit => {
+      return unit.id === updatedUnit.id ? updatedUnit : unit
+    });
+    setCurrentUnit(updatedUnit);
+    setStorageUnits(updatedUnits);
     navigation.goBack();
   }
   
   const handleReset = () => {
-    
+    setName('');
+    setDesc('');
+    setSelectedDay(moment().format("YYYY-MMM-DD"));
   }
 
   const renderSelectedDay = () => {
     const momentDate = moment(selectedDay, "YYYY-MMM-DD");
     return momentDate.format("MMMM Do, YYYY");
   };
+  
+  const renderButtonDisabled = () => {
+    return !name ? true : false;
+  }
+  
+  const renderButtonTextStyles = () => {
+    return !name ? newStorageItemPageStyles.disabledText : defaultStyles.text;
+  }
   
   const RenderedCalendar = useMemo(() => {
     const calendar = generateCalendar(selectedDay);
@@ -80,7 +96,7 @@ export const NewStorageItemPage = ({ navigation }) => {
         <Text style={defaultStyles.pageTitle}>New Item</Text>
         <View style={newStorageItemPageStyles.content}>
           <View style={newStorageItemPageStyles.inputContainer}>
-            <Text style={newStorageItemPageStyles.inputLabel}>Item Name</Text>
+            <Text style={newStorageItemPageStyles.inputLabel}>Item Name *</Text>
             <TextInput
               style={renderInputStyle("name")}
               onFocus={() => handleFocus("name")}
@@ -111,11 +127,11 @@ export const NewStorageItemPage = ({ navigation }) => {
               </Pressable>
           </View>
           <View style={newStorageItemPageStyles.actionsContainer}>
-              <Pressable style={newStorageItemPageStyles.actionButton} onPress={handleSave}>
-                <Text style={defaultStyles.text}>Save</Text>
+              <Pressable disabled={renderButtonDisabled()} style={newStorageItemPageStyles.actionButton} onPress={handleSave}>
+                <Text style={renderButtonTextStyles()}>Save</Text>
               </Pressable>
-              <Pressable style={newStorageItemPageStyles.actionButton} onPress={handleReset}>
-                <Text style={defaultStyles.text}>Reset</Text>
+              <Pressable disabled={renderButtonDisabled()} style={newStorageItemPageStyles.actionButton} onPress={handleReset}>
+                <Text style={renderButtonTextStyles()}>Reset</Text>
               </Pressable>
           </View>
           <CustomModal
