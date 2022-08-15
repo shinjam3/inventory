@@ -23,7 +23,7 @@ export const storageUnitPageStyles = StyleSheet.create({
     width: fullWidth,
     flex: 1,
     padding: 10,
-    backgroundColor: 'gold'
+    alignItems: 'center',
   },
   noItems: {
     fontSize: 20

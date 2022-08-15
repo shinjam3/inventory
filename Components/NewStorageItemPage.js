@@ -13,8 +13,9 @@ import { AntDesign } from '@expo/vector-icons';
 import { Store } from "../Store";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
+import { generateCalendar, cloneStorageUnit, replaceStorageUnit } from '../utils';
 
-import { Calendar, generateCalendar } from "./Calendar";
+import { Calendar } from "./Calendar";
 import { CustomModal } from './CustomModal';
 
 import { defaultStyles } from "../Styles/defaultStyles";
@@ -54,13 +55,11 @@ export const NewStorageItemPage = ({ navigation }) => {
       id: uuidv4(),
       name,
       desc,
-      expiryDate: selectedDay
+      expiryDate: moment(selectedDay, "YYYY-MMM-DD").format("MMMM Do, YYYY")
     };
-    const updatedUnit = JSON.parse(JSON.stringify(currentUnit));
+    const updatedUnit = cloneStorageUnit(currentUnit);
     updatedUnit.items.push(newItem);
-    const updatedUnits = storageUnits.map(unit => {
-      return unit.id === updatedUnit.id ? updatedUnit : unit
-    });
+    const updatedUnits = replaceStorageUnit(storageUnits, updatedUnit);
     setCurrentUnit(updatedUnit);
     setStorageUnits(updatedUnits);
     navigation.goBack();

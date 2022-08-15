@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView, StatusBar, View, Text, Pressable, FlatList } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Store } from "../Store";
+import {cloneStorageUnit, replaceStorageUnit} from '../utils';
 
 import {StorageUnitItem} from './StorageUnitItem';
 
@@ -9,9 +10,10 @@ import { defaultStyles } from "../Styles/defaultStyles";
 import { storageUnitPageStyles } from "../Styles/storageUnitPageStyles";
 
 export const StorageUnitPage = ({ navigation }) => {
-  const { currentUnit } = useContext(Store);
+  const { currentUnit, setCurrentUnit, storageUnits, setStorageUnits } = useContext(Store);
   const [items, setItems] = useState(currentUnit.items);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [deleteMode, setDeleteMode] = useState(false);
 
   useEffect(() => {
     setItems(currentUnit.items);
@@ -26,11 +28,21 @@ export const StorageUnitPage = ({ navigation }) => {
         navigation.navigate("NewStorageItemPage");;
         break;
       case "delete":
+        setDeleteMode(!deleteMode);
         break;
       default:
         break;
     }
   };
+  
+  const handleDelete = (itemId) => {
+    const updatedItems = items.filter(item => item.id !== itemId);
+    const updatedUnit = cloneStorageUnit(currentUnit);
+    updatedUnit.items = updatedItems;
+    const updatedStorageUnits = replaceStorageUnit(storageUnits, updatedUnit);
+    setCurrentUnit(updatedUnit);
+    setStorageUnits(updatedStorageUnits);
+  }
 
   return (
     <SafeAreaView style={defaultStyles.container}>
@@ -58,17 +70,21 @@ export const StorageUnitPage = ({ navigation }) => {
 
       <View style={defaultStyles.contentContainer}>
         {items.length ? (
-          <View style={storageUnitPageStyles.flatListContainer}>
             <FlatList
               data={items}
-              renderItem={StorageUnitItem}
+              renderItem={({item}) => (
+                <StorageUnitItem
+                  data={item}
+                  deleteMode={deleteMode}
+                  onDelete={handleDelete}
+                />
+              )}
               keyExtractor={item => item.id}
+              contentContainerStyle={storageUnitPageStyles.flatListContainer}
             />
-          </View>
         ) : (
           <Text style={storageUnitPageStyles.noItems}>No items...</Text>
-          //<StorageUnitItem item={{name: 'n', desc: 'd', expiryDate: 'today'}} />
-        )}
+          )}
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>
