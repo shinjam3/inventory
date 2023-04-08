@@ -1,29 +1,40 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform, StatusBar, Dimensions } from "react-native";
+
+const fullWidth = Dimensions.get('window').width; //full width
+const fullHeight = Dimensions.get('window').height; //full height
 
 export const defaultStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    backgroundColor: "lightseagreen",
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  pageTitle: {
-    marginTop: 20,
-    fontSize: 30,
+  appTitle: {
+    fontSize: 34,
     fontWeight: "bold",
     textAlign: "center",
     width: "100%",
-    height: 40,
+    color: '#fff',
+    marginTop: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: {width: -1, height: 1},
+    textShadowRadius: 10
+  },
+  pageTitle: {
+    margin: 20,
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    width: "100%",
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    width: fullWidth,
     alignItems: "center",
     justifyContent: "center",
-  },
-  barCodeScanner: {
-    width: "100%",
-    height: "100%",
+    backgroundColor: 'gainsboro'
   },
   text: {
     fontSize: 16
@@ -31,5 +42,20 @@ export const defaultStyles = StyleSheet.create({
   boldedText: {
     fontSize: 16,
     fontWeight: 'bold'
+  },
+  toolbar: {
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    backgroundColor: 'darkgray'
+  },
+  toolbarOption: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

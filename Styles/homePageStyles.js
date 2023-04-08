@@ -5,20 +5,11 @@ export const homePageStyles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
   },
-  flatList: {
-    height: 350,
-    borderColor: "blue",
-    borderWidth: 1,
+  flatListContainer: {
+    padding: 20,
+    flex: 1,
   },
-  button: {
-    margin: 30,
-    padding: 15,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "gainsboro",
-  },
-  buttonText: {
-    fontSize: 20,
-  },
+  addButton: {
+    marginBottom: 40,
+  }
 });

@@ -1,6 +1,21 @@
 import { StyleSheet } from "react-native";
 
-export const newStorageItemPageStyles = StyleSheet.create({
+export const itemPageStyles = StyleSheet.create({
+  toolbar: {
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: 'black',
+    marginBottom: 20
+  },
+  toolbarOption: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   content: {
     flex: 1,
     width: '100%',
@@ -55,12 +70,6 @@ export const newStorageItemPageStyles = StyleSheet.create({
     width: 140,
     height: 50,
     borderRadius: 10,
-  },
-  closeModalButton: {
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
   },
   actionsContainer: {
     flexDirection: 'row',

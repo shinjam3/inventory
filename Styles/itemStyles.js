@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const storageUnitItemStyles = StyleSheet.create({
+export const itemStyles = StyleSheet.create({
   container: {
     width: 320,
     padding: 10,
@@ -10,7 +10,7 @@ export const storageUnitItemStyles = StyleSheet.create({
     flexWrap: 'nowrap'
   },
   details: {
-    flex: 3
+    flex: 4
   },
   name: {
     fontSize: 20,

@@ -7,13 +7,14 @@ export const storageUnitListItemStyles = StyleSheet.create({
   container: {
     width: 300,
     height: 80,
-    backgroundColor: "lightblue",
+    backgroundColor: "white",
     borderColor: 'black',
     borderWidth: 1,
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: 5
   },
   name: {
     fontWeight: 'bold',

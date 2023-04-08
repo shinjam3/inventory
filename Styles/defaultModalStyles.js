@@ -23,4 +23,10 @@ export const defaultModalStyles = StyleSheet.create({
     shadowRadius: 4.65,
     elevation: 6,
   },
+  closeModalButton: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
 })

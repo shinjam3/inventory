@@ -5,20 +5,27 @@ import moment from "moment";
 import { calendarStyles } from "../Styles/calendarStyles";
 import { defaultStyles } from '../Styles/defaultStyles';
 
-export const Calendar = ({ selectedDay, calendarMatrix, handleDayPress }) => {
-  const newDate = moment(selectedDay, "YYYY-MMM-DD");
+export const Calendar = ({ expDate, referenceDay, calendarMatrix, handleDayPress }) => {
+  const refDay = referenceDay ? moment(referenceDay, "YYYY-MMM-DD") : moment();
+  const expiryDate = expDate ? moment(expDate, "YYYY-MMM-DD") : '';
+  const today = moment();
   
-  const renderDayStyle = (currentDay) => {
-    return newDate.isSame(currentDay, "day") ? calendarStyles.selectedDay : calendarStyles.day;
+  const renderDayStyle = (day) => {
+    if (
+      (expiryDate && expiryDate.isSame(day, "day")) ||
+      (today.isSame(expiryDate, "day") && today.isSame(day, "day"))
+    ) return calendarStyles.expiryDay;
+    else if (today.isSame(day, "day")) return calendarStyles.today;
+    else return calendarStyles.day;
   };
 
   const handleMonthChange = (type) => {
     switch (type) {
       case 'prev':
-        handleDayPress(newDate.clone().subtract(1, 'months'));
+        handleDayPress(refDay.clone().subtract(1, 'months'), false);
         break;
       case 'next':
-        handleDayPress(newDate.clone().add(1, 'months'));
+        handleDayPress(refDay.clone().add(1, 'months'), false);
         break;
       default:
         break;
@@ -29,7 +36,7 @@ export const Calendar = ({ selectedDay, calendarMatrix, handleDayPress }) => {
     <View style={calendarStyles.calendar}>
       <View style={calendarStyles.monthContainer}>
         <AntDesign name="left" size={24} color="black" onPress={() => handleMonthChange('prev')} />
-        <Text style={calendarStyles.month}>{newDate.format("MMMM YYYY")}</Text>
+        <Text style={calendarStyles.month}>{refDay.format("MMMM YYYY")}</Text>
         <AntDesign name="right" size={24} color="black" onPress={() => handleMonthChange('next')} />
       </View>
       <View style={calendarStyles.weekNames}>
@@ -61,13 +68,23 @@ export const Calendar = ({ selectedDay, calendarMatrix, handleDayPress }) => {
             <Pressable
               key={calendarDay.format("YYYY-MMM-DD")}
               style={renderDayStyle(calendarDay)}
-              onPress={() => handleDayPress(calendarDay)}
+              onPress={() => handleDayPress(calendarDay, true)}
             >
               <Text>{calendarDay.format("D")}</Text>
             </Pressable>
           ))}
         </View>
       ))}
+      <View style={calendarStyles.legendContainer}>
+        <View style={calendarStyles.legendItem}>
+          <View style={calendarStyles.todaysDate}></View>
+          <Text>{"Today's Date"}</Text>
+        </View>
+        <View style={calendarStyles.legendItem}>
+          <View style={calendarStyles.expiryDate}></View>
+          <Text>Selected Date</Text>
+        </View>
+      </View>
     </View>
   );
 };
