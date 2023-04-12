@@ -7,12 +7,12 @@ import { defaultStyles } from '../Styles/defaultStyles';
 
 export const Calendar = ({ expDate, referenceDay, calendarMatrix, handleDayPress }) => {
   const refDay = referenceDay ? moment(referenceDay, "YYYY-MMM-DD") : moment();
-  const expiryDate = expDate ? moment(expDate, "YYYY-MMM-DD") : '';
+  const expiryDate = moment(expDate, "YYYY-MMM-DD");
   const today = moment();
   
   const renderDayStyle = (day) => {
     if (
-      (expiryDate && expiryDate.isSame(day, "day")) ||
+      (expiryDate.isValid() && expiryDate.isSame(day, "day")) ||
       (today.isSame(expiryDate, "day") && today.isSame(day, "day"))
     ) return calendarStyles.expiryDay;
     else if (today.isSame(day, "day")) return calendarStyles.today;

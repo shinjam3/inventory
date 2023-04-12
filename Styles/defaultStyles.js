@@ -18,12 +18,14 @@ export const defaultStyles = StyleSheet.create({
     width: "100%",
     color: '#fff',
     marginTop: 20,
+    marginBottom: -20,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 1},
     textShadowRadius: 10
   },
   pageTitle: {
-    margin: 20,
+    marginTop: 40,
+    marginBottom: 20,
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",

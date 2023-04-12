@@ -20,7 +20,8 @@ export const Item = ({ data, deleteMode, onDelete, onSelected }) => {
       <View style={itemStyles.details}>
         <Text style={itemStyles.name}>{data.name}</Text>
         <Text style={defaultStyles.text}>Quantity: {data.quantity}</Text>
-        <Text style={defaultStyles.text}>Expiry date: {data.expiryDate}</Text>
+        <Text style={defaultStyles.text}>Expiry Date: {data.expiryDate}</Text>
+        <Text style={defaultStyles.text}>Expiry Notification Date: {data.expiryDateNotif}</Text>
       </View>
     </Pressable>
   );

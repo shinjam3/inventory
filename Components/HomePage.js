@@ -19,7 +19,8 @@ import * as Crypto from 'expo-crypto';
 import { Store } from "../Store";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import moment from 'moment';
+import {saveLocalData, getLocalData, cloneStorageUnit} from '../utils';
 import { StorageUnitListItem, RenderStorageUnits } from "./StorageUnitListItem";
 import { AddNewStorageModal } from "./AddNewStorageModal";
 import { StorageUnitOptions } from "./StorageUnitOptions";
@@ -32,18 +33,37 @@ export const HomePage = ({ navigation }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState(undefined);
+  const [notifications, setNotifications] = useState([]);
   
   useEffect(() => {
     const getDataFromDevice = async () => {
       try {
-        const jsonFromDevice = await AsyncStorage.getItem('@InventoryApp_storageUnits');
-        const dataFromDevice = JSON.parse(jsonFromDevice);
-        if (dataFromDevice !== null && Array.isArray(dataFromDevice)) {
+        const dataFromDevice = await getLocalData();
+        if (Array.isArray(dataFromDevice) && dataFromDevice.length) {
           setStorageUnits(dataFromDevice);
+          const notifs = [];
+          const todaysDate = new Date();
+          dataFromDevice.forEach(unit => {
+            unit.items?.forEach(item => {
+              const expDateMoment = moment(item.expiryDate, "MMMM Do, YYYY");
+              const expDateNotifMoment = moment(item.expiryDateNotif, "MMMM Do, YYYY");
+              const datesAreValid = expDateMoment.isValid() && expDateNotifMoment.isValid();
+              const isBetweenNotifAndExpDate = datesAreValid && moment(todaysDate).isBetween(expDateNotifMoment, expDateMoment, "day");
+              const todayNotifDate = datesAreValid && expDateNotifMoment.isSame(todaysDate, "day");
+              const todayExpDate = datesAreValid && expDateMoment.isSame(todaysDate, "day");
+              if (todayNotifDate || isBetweenNotifAndExpDate || todayExpDate) {
+                const daysDiff = expDateMoment.diff(expDateNotifMoment, 'days');
+                const notifMsg = `${item.name} from ${unit.name} is expiring in ${daysDiff} ${daysDiff === 1 ? 'day' : 'days'}`;
+                notifs.push(notifMsg);
+              }
+            })
+          });
+          setNotifications(notifs);
         }
-      } catch(e) {}
+      } catch(e) {
+        alert('Error: could not retrieve saved data from device storage');
+      }
     };
-    
     getDataFromDevice();
   }, []);
 
@@ -56,11 +76,7 @@ export const HomePage = ({ navigation }) => {
     };
     const newUnits = [newUnit, ...storageUnits];
     setStorageUnits(newUnits);
-    try {
-      await AsyncStorage.setItem('@InventoryApp_storageUnits', JSON.stringify(newUnits));
-    } catch (e) {
-      alert('Error: could not save to device storage');
-    }
+    await saveLocalData(newUnits);
   };
 
   const handleToStorageUnitPage = () => navigation.navigate("StorageUnitPage");
@@ -70,14 +86,17 @@ export const HomePage = ({ navigation }) => {
     setSelectedUnit(unitData);
   };
 
-  const handleRenameUnit = (unitId, newName) => {
+  const handleRenameUnit = async (unitId, newName) => {
     const renameUnit = storageUnits.find((unit) => unit.id === unitId);
     if (renameUnit) renameUnit.name = newName;
+    const storageUnitsClone = cloneStorageUnit(storageUnits);
+    await saveLocalData(storageUnitsClone);
   };
 
-  const handleDeleteUnit = (unitId) => {
+  const handleDeleteUnit = async (unitId) => {
     const filtered = storageUnits.filter((unit) => unit.id !== unitId);
     setStorageUnits(filtered);
+    await saveLocalData(filtered);
   };
 
   return (
@@ -85,6 +104,9 @@ export const HomePage = ({ navigation }) => {
       <Text style={defaultStyles.appTitle}>INVENTORY</Text>
       <Text style={defaultStyles.pageTitle}>Storage Units</Text>
       <View style={defaultStyles.contentContainer}>
+        {notifications.map((notif, idx) => (
+          <Text key={idx}>{notif}</Text>
+        ))}
         {storageUnits.length ? (
           // have to put FlatList container styles in a View that wraps the list
           <View style={homePageStyles.flatListContainer}>

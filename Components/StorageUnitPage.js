@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Store } from "../Store";
-import { cloneStorageUnit, replaceArrayElement } from "../utils";
+import { cloneStorageUnit, replaceArrayElement, saveLocalData } from "../utils";
 
 import { Item } from "./Item";
 
@@ -43,13 +43,14 @@ export const StorageUnitPage = ({ navigation }) => {
     }
   };
 
-  const handleDelete = (itemId) => {
+  const handleDelete = async (itemId) => {
     const updatedItems = items.filter((item) => item.id !== itemId);
     const updatedUnit = cloneStorageUnit(currentUnit);
     updatedUnit.items = updatedItems;
     const updatedStorageUnits = replaceArrayElement(storageUnits, updatedUnit);
     setCurrentUnit(updatedUnit);
     setStorageUnits(updatedStorageUnits);
+    await saveLocalData(updatedStorageUnits);
   };
   
   const handleSelected = (itemData) => {

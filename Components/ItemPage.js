@@ -9,12 +9,14 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Store } from "../Store";
 import moment from "moment";
 import * as Crypto from 'expo-crypto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   generateCalendar,
   cloneStorageUnit,
@@ -34,19 +36,23 @@ export const ItemPage = ({ route, navigation }) => {
   const [itemExists, setItemExists] = useState(false);
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("1");
+  const quantityInput = useRef(null);
   const [focused, setFocused] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [showScanner, setShowScanner] = useState(false);
   const [expDate, setExpDate] = useState('');
   const [referenceDay, setReferenceDay] = useState('');
-  const quantityInput = useRef(null);
+  const [expDateNotif, setExpDateNotif] = useState('');
+  const [showDatePicker, setShowDatePicker] = useState(false);
   
   useEffect(() => {
     if (route.params) {
-      const setDate = moment(route.params.itemData.expiryDate, "MMMM Do, YYYY");
+      const savedExpDate = moment(route.params.itemData.expiryDate, "MMMM Do, YYYY");
+      const savedDateNotif = moment(route.params.itemData.expiryDateNotif, "MMMM Do, YYYY");
       setName(route.params.itemData.name);
       setQuantity(route.params.itemData.quantity);
-      setExpDate(setDate.isValid() ? setDate : '');
+      setExpDate(savedExpDate.isValid() ? savedExpDate : '');
+      setExpDateNotif(savedDateNotif.isValid() ? savedDateNotif.toDate() : '');
       setItemExists(route.params.exists || false);
     }
   }, [route]);
@@ -100,6 +106,7 @@ export const ItemPage = ({ route, navigation }) => {
       name,
       quantity,
       expiryDate: expDate ? moment(expDate, "YYYY-MMM-DD").format("MMM. Do, YYYY") : "Not Set",
+      expiryDateNotif: expDateNotif ? moment(expDateNotif).format("MMM. Do, YYYY") : "Not Set",
     };
     const updatedUnit = cloneStorageUnit(currentUnit);
     if (itemExists) {
@@ -124,21 +131,24 @@ export const ItemPage = ({ route, navigation }) => {
     setQuantity("1");
     setExpDate('');
     setReferenceDay('');
+    setExpDateNotif('');
   };
   
-  const renderSelectedDay = () => {
-    if (expDate) {
-      const momentDate = moment(expDate, "YYYY-MMM-DD");
-      return momentDate.format("MMM. Do, YYYY");
-    } else return "Not Set";
+  const renderSelectedDay = (type) => {
+    if (type === 'exp' && expDate) {
+      return moment(expDate, "YYYY-MMM-DD").format("MMM. Do, YYYY");
+    } else if (type === 'notif' && expDateNotif) {
+      return moment(expDateNotif).format("MMM. Do, YYYY");
+    }
+    else return "Not Set";
   };
 
   const renderButtonDisabled = () => {
-    return !(name || quantity > 1 || expDate);
+    return !(name || quantity > 1 || expDate || expDateNotif);
   };
 
   const renderButtonTextStyles = () => {
-    return !(name || quantity > 1 || expDate) ? itemPageStyles.disabledText : defaultStyles.text;
+    return !(name || quantity > 1 || expDate || expDateNotif) ? itemPageStyles.disabledText : defaultStyles.text;
   };
 
   const RenderedCalendar = useMemo(() => {
@@ -151,12 +161,24 @@ export const ItemPage = ({ route, navigation }) => {
         handleDayPress={handleDayPress}
       />
     );
-  }, [referenceDay]);
+  }, [referenceDay, expDate]);
+  
+  const onExpDateNotifChange = (event, selectedDate) => {
+    setShowDatePicker(false);
+    if (event.type === 'set') {
+      const expDateMoment = expDate ?  moment(expDate, "YYYY-MMM-DD") : '';
+      if (expDateMoment.isSame(selectedDate, "day") || expDateMoment.isBefore(selectedDate, "day")) {
+        alert('Cannot pick a later notification date than the expiry date.');
+      } else {
+        setExpDateNotif(selectedDate);
+      }
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={handleInputBlur} accessible={false}>
       <SafeAreaView style={defaultStyles.contentContainer}>
-        <Text style={defaultStyles.pageTitle}>New Item</Text>
+        <Text style={defaultStyles.pageTitle}>{name || "New Item"}</Text>
         <View style={itemPageStyles.toolbar}>
           <Pressable
             style={itemPageStyles.toolbarOption}
@@ -192,7 +214,7 @@ export const ItemPage = ({ route, navigation }) => {
               value={name}
               placeholder="Enter a name here..."
               blurOnSubmit={false}
-              onSubmitEditing={() => {console.log(quantityInput.current.value); quantityInput.current.focus()}}
+              onSubmitEditing={() => quantityInput.current.focus()}
             />
           </View>
           <View style={itemPageStyles.inputContainer}>
@@ -212,18 +234,42 @@ export const ItemPage = ({ route, navigation }) => {
             />
           </View>
           <View style={itemPageStyles.expiryDateContainer}>
-            <View>
-              <Text style={itemPageStyles.inputLabel}>
-                Expiry Date
-              </Text>
-              <Text style={defaultStyles.text}>{renderSelectedDay()}</Text>
+            <View style={itemPageStyles.calendarContainer}>
+              <View>
+                <Text style={itemPageStyles.inputLabel}>
+                  Expiry Date
+                </Text>
+                <Text style={defaultStyles.text}>{renderSelectedDay('exp')}</Text>
+              </View>
+              <Pressable
+                style={itemPageStyles.button}
+                onPress={handleShowButtonPress}
+              >
+                <Text style={defaultStyles.text}>Show Calendar</Text>
+              </Pressable>
             </View>
-            <Pressable
-              style={itemPageStyles.button}
-              onPress={handleShowButtonPress}
-            >
-              <Text style={defaultStyles.text}>Show Calendar</Text>
-            </Pressable>
+            <View style={itemPageStyles.calendarContainer}>
+              <View>
+                <Text style={itemPageStyles.inputLabel}>Notification Date</Text>
+                <Text style={defaultStyles.text}>{renderSelectedDay('notif')}</Text>
+              </View>
+              <Pressable
+                style={itemPageStyles.button}
+                onPress={() => setShowDatePicker(true)}
+              >
+                <Text style={defaultStyles.text}>Show Date Selector</Text>
+              </Pressable>
+              {showDatePicker && (
+                <DateTimePicker
+                  display={'spinner'}
+                  testID="dateTimePicker"
+                  value={expDateNotif || new Date()}
+                  mode={'date'}
+                  is24Hour={true}
+                  onChange={onExpDateNotifChange}
+                />
+              )}
+            </View>
           </View>
           <View style={itemPageStyles.actionsContainer}>
             <Pressable
@@ -254,6 +300,7 @@ export const ItemPage = ({ route, navigation }) => {
             <BarcodeScanner setScannedData={handleScannedData} closeModal={() => setShowScanner(false)} />
           </CustomModal>
         </View>
+        <StatusBar style="auto" />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

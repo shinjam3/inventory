@@ -27,6 +27,7 @@ export const itemPageStyles = StyleSheet.create({
   inputLabel: {
     fontSize: 16,
     fontWeight: 'bold',
+    width: 160
   },
   input: {
     fontSize: 16,
@@ -57,16 +58,24 @@ export const itemPageStyles = StyleSheet.create({
     elevation: 8,
   },
   expiryDateContainer: {
+    height: 170,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    marginBottom: 30,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 10,
+  },
+  calendarContainer: {
     flexDirection: 'row',
     flexWrap: 'nowrap',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 30
   },
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'gainsboro',
+    backgroundColor: 'white',
     width: 140,
     height: 50,
     borderRadius: 10,
@@ -83,7 +92,7 @@ export const itemPageStyles = StyleSheet.create({
   actionButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'gainsboro',
+    backgroundColor: 'white',
     width: 100,
     height: 50,
     borderRadius: 10,
