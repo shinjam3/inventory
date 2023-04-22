@@ -1,40 +1,28 @@
 import React, { useState, useContext, useEffect } from "react";
-import { BarCodeScanner } from "expo-barcode-scanner";
 import { StatusBar } from "expo-status-bar";
-import {
-  Text,
-  Modal,
-  View,
-  SafeAreaView,
-  Button,
-  TextInput,
-  Keyboard,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  FlatList,
-  Pressable,
-} from "react-native";
-import "react-native-get-random-values";
-import * as Crypto from 'expo-crypto';
+import { Text, View, SafeAreaView, FlatList, Pressable } from "react-native";
+import * as Crypto from "expo-crypto";
 import { Store } from "../Store";
 import { SimpleLineIcons } from "@expo/vector-icons";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import moment from 'moment';
-import {saveLocalData, getLocalData, cloneStorageUnit} from '../utils';
-import { StorageUnitListItem, RenderStorageUnits } from "./StorageUnitListItem";
+import moment from "moment";
+import { saveLocalData, getLocalData, cloneStorageUnit } from "../utils";
+import { StorageUnitListItem } from "./StorageUnitListItem";
 import { AddNewStorageModal } from "./AddNewStorageModal";
 import { StorageUnitOptions } from "./StorageUnitOptions";
+import { Notifications } from "./Notifications";
 
 import { defaultStyles } from "../Styles/defaultStyles";
-import { homePageStyles, addModalStyles } from "../Styles/homePageStyles";
+import { homePageStyles } from "../Styles/homePageStyles";
+import { CustomModal } from "./CustomModal";
 
 export const HomePage = ({ navigation }) => {
-  const {storageUnits, setStorageUnits} = useContext(Store);
+  const { storageUnits, setStorageUnits } = useContext(Store);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedUnit, setSelectedUnit] = useState(undefined);
   const [notifications, setNotifications] = useState([]);
-  
+  const [showNotifs, setShowNotifs] = useState(false);
+
   useEffect(() => {
     const getDataFromDevice = async () => {
       try {
@@ -43,25 +31,41 @@ export const HomePage = ({ navigation }) => {
           setStorageUnits(dataFromDevice);
           const notifs = [];
           const todaysDate = new Date();
-          dataFromDevice.forEach(unit => {
-            unit.items?.forEach(item => {
+          dataFromDevice.forEach((unit) => {
+            unit.items?.forEach((item) => {
               const expDateMoment = moment(item.expiryDate, "MMMM Do, YYYY");
-              const expDateNotifMoment = moment(item.expiryDateNotif, "MMMM Do, YYYY");
-              const datesAreValid = expDateMoment.isValid() && expDateNotifMoment.isValid();
-              const isBetweenNotifAndExpDate = datesAreValid && moment(todaysDate).isBetween(expDateNotifMoment, expDateMoment, "day");
-              const todayNotifDate = datesAreValid && expDateNotifMoment.isSame(todaysDate, "day");
-              const todayExpDate = datesAreValid && expDateMoment.isSame(todaysDate, "day");
+              const expDateNotifMoment = moment(
+                item.expiryDateNotif,
+                "MMMM Do, YYYY"
+              );
+              const datesAreValid =
+                expDateMoment.isValid() && expDateNotifMoment.isValid();
+              const isBetweenNotifAndExpDate =
+                datesAreValid &&
+                moment(todaysDate).isBetween(
+                  expDateNotifMoment,
+                  expDateMoment,
+                  "day"
+                );
+              const todayNotifDate =
+                datesAreValid && expDateNotifMoment.isSame(todaysDate, "day");
+              const todayExpDate =
+                datesAreValid && expDateMoment.isSame(todaysDate, "day");
               if (todayNotifDate || isBetweenNotifAndExpDate || todayExpDate) {
-                const daysDiff = expDateMoment.diff(expDateNotifMoment, 'days');
-                const notifMsg = `${item.name} from ${unit.name} is expiring in ${daysDiff} ${daysDiff === 1 ? 'day' : 'days'}`;
+                const daysDiff = expDateMoment.diff(expDateNotifMoment, "days");
+                const notifMsg = `${item.name} from ${
+                  unit.name
+                } is expiring in ${daysDiff} ${
+                  daysDiff === 1 ? "day" : "days"
+                }`;
                 notifs.push(notifMsg);
               }
-            })
+            });
           });
           setNotifications(notifs);
         }
-      } catch(e) {
-        alert('Error: could not retrieve saved data from device storage');
+      } catch (e) {
+        alert("Error: could not retrieve saved data from device storage");
       }
     };
     getDataFromDevice();
@@ -99,53 +103,37 @@ export const HomePage = ({ navigation }) => {
     await saveLocalData(filtered);
   };
 
+  const closeNotification = (idx) => {
+    setNotifications(notifications.filter((notif, index) => index !== idx));
+  };
+
   return (
     <SafeAreaView style={defaultStyles.container}>
       <Text style={defaultStyles.appTitle}>INVENTORY</Text>
-      <Text style={defaultStyles.pageTitle}>Storage Units</Text>
+      <View style={homePageStyles.subtitleContainer}>
+        <View style={homePageStyles.notificationBell}>
+            <SimpleLineIcons name="bell" size={30} onPress={() => setShowNotifs(true)} />
+        </View>
+        <Text style={homePageStyles.pageTitle}>Storage Units</Text>
+        <View style={homePageStyles.subtitleFiller} />
+      </View>
       <View style={defaultStyles.contentContainer}>
-        {notifications.map((notif, idx) => (
-          <Text key={idx}>{notif}</Text>
-        ))}
         {storageUnits.length ? (
           // have to put FlatList container styles in a View that wraps the list
           <View style={homePageStyles.flatListContainer}>
-              <FlatList
-                bounces={false}
-                data={storageUnits}
-                renderItem={({ item }) => (
-                  <StorageUnitListItem
-                    data={item}
-                    toStorageUnitPage={handleToStorageUnitPage}
-                    openOptions={handleOpenOptions}
-                  />
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          /*
-          storageUnits.length < 4 ? (
-            <RenderStorageUnits
+            <FlatList
+              bounces={false}
               data={storageUnits}
-              toStorageUnitPage={handleToStorageUnitPage}
-              openOptions={handleOpenOptions}
+              renderItem={({ item }) => (
+                <StorageUnitListItem
+                  data={item}
+                  toStorageUnitPage={handleToStorageUnitPage}
+                  openOptions={handleOpenOptions}
+                />
+              )}
+              keyExtractor={(item) => item.id}
             />
-          ) : (
-            <View style={homePageStyles.flatList}>
-              <FlatList
-                data={storageUnits}
-                renderItem={({ item }) => (
-                  <StorageUnitListItem
-                    data={item}
-                    toStorageUnitPage={handleToStorageUnitPage}
-                    openOptions={handleOpenOptions}
-                  />
-                )}
-                keyExtractor={(item) => item.id}
-              />
-            </View>
-          )
-          */
+          </View>
         ) : (
           <Text style={homePageStyles.noUnitsText}>No storage units</Text>
         )}
@@ -155,6 +143,15 @@ export const HomePage = ({ navigation }) => {
         >
           <SimpleLineIcons name="plus" size={40} color="black" />
         </Pressable>
+        <CustomModal isVisible={showNotifs} closeModal={() => setShowNotifs(false)}>
+          {notifications.length ? (
+            <View>
+              <Text style={homePageStyles.notificationsModalTitle}>Notifications</Text>
+              <Notifications notifs={notifications} closeNotif={closeNotification}
+              />
+            </View>
+          ) : <Text style={homePageStyles.notificationsModalTitle}>No Notifications</Text>}
+        </CustomModal>
         <AddNewStorageModal
           isVisible={showAddModal}
           submitName={handleSubmitName}

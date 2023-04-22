@@ -7,9 +7,10 @@ export const defaultModalStyles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
   content: {
-    padding: 10,
+    padding: 20,
     top: "25%",
     alignSelf: "center",
     backgroundColor: "white",

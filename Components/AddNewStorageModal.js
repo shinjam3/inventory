@@ -1,15 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   Text,
   Modal,
   View,
-  SafeAreaView,
-  Button,
   TextInput,
   Keyboard,
-  StyleSheet,
   TouchableWithoutFeedback,
-  FlatList,
   Pressable,
 } from "react-native";
 import { addNewStorageModalStyles } from "../Styles/addNewStorageModalStyles";
@@ -26,7 +22,7 @@ export const AddNewStorageModal = ({ isVisible, submitName, closeModal }) => {
   };
 
   return (
-    <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={closeModal}>
+    <Modal animationType="fade" transparent={true} visible={isVisible} onRequestClose={closeModal}>
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={defaultModalStyles.overlay} />
       </TouchableWithoutFeedback>

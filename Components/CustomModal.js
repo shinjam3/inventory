@@ -10,7 +10,7 @@ import { defaultModalStyles } from '../Styles/defaultModalStyles';
 
 export const CustomModal = ({ isVisible, closeModal, children }) => {
   return (
-    <Modal animationType="slide" transparent={true} visible={isVisible} onRequestClose={closeModal}>
+    <Modal animationType="fade" transparent={true} visible={isVisible} onRequestClose={closeModal}>
       <TouchableWithoutFeedback onPress={closeModal}>
         <View style={defaultModalStyles.overlay} />
       </TouchableWithoutFeedback>

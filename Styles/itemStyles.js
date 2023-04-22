@@ -7,7 +7,8 @@ export const itemStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000',
     flexDirection: 'row',
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    backgroundColor: 'white'
   },
   details: {
     flex: 4

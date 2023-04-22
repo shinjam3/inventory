@@ -104,7 +104,7 @@ export const StorageUnitOptions = ({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={isVisible}
       onRequestClose={handleCloseOptions}
