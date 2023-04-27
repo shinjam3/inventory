@@ -1,9 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Store } from "../Store";
-import { defaultStyles } from "../Styles/defaultStyles";
+import React, { useState, useEffect } from "react";
 import { barcodeScannerStyles } from "../Styles/barcodeScannerStyles";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { Camera, CameraType } from "expo-camera";
+import { Camera } from "expo-camera";
 import { Text, View, Pressable } from "react-native";
 import * as Linking from "expo-linking";
 

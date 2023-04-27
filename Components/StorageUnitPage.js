@@ -10,7 +10,6 @@ import {
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Store } from "../Store";
 import { cloneStorageUnit, replaceArrayElement, saveLocalData } from "../utils";
-
 import { Item } from "./Item";
 
 import { defaultStyles } from "../Styles/defaultStyles";

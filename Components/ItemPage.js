@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   TextInput,
   Pressable,
-  StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
@@ -16,7 +15,6 @@ import { Store } from "../Store";
 import moment from "moment";
 import * as Crypto from 'expo-crypto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   generateCalendar,
   cloneStorageUnit,
@@ -29,6 +27,7 @@ import { BarcodeScanner } from "./BarcodeScanner";
 
 import { defaultStyles } from "../Styles/defaultStyles";
 import { itemPageStyles } from "../Styles/itemPageStyles";
+import { CustomDatePicker } from "./CustomDatePicker";
 
 export const ItemPage = ({ route, navigation }) => {
   const { storageUnits, setStorageUnits, currentUnit, setCurrentUnit } =
@@ -101,6 +100,10 @@ export const ItemPage = ({ route, navigation }) => {
   };
 
   const handleSave = async () => {
+    if (!name) {
+      alert('Please enter item name before saving.');
+      return
+    };
     const newItem = {
       id: itemExists ? route.params.itemData.id : Crypto.randomUUID(),
       name,
@@ -162,32 +165,25 @@ export const ItemPage = ({ route, navigation }) => {
       />
     );
   }, [referenceDay, expDate]);
-  
-  const onExpDateNotifChange = (event, selectedDate) => {
+
+  const setNotificationDate = (day) => {
     setShowDatePicker(false);
-    if (event.type === 'set') {
-      const expDateMoment = expDate ?  moment(expDate, "YYYY-MMM-DD") : '';
-      if (expDateMoment.isSame(selectedDate, "day") || expDateMoment.isBefore(selectedDate, "day")) {
-        alert('Cannot pick a later notification date than the expiry date.');
-      } else {
-        setExpDateNotif(selectedDate);
-      }
-    }
-  };
+    setExpDateNotif(day);
+  }
 
   return (
     <TouchableWithoutFeedback onPress={handleInputBlur} accessible={false}>
-      <SafeAreaView style={defaultStyles.contentContainer}>
+      <SafeAreaView style={defaultStyles.container}>
         <Text style={defaultStyles.pageTitle}>{name || "New Item"}</Text>
-        <View style={itemPageStyles.toolbar}>
+        <View style={{...defaultStyles.toolbar}}>
           <Pressable
-            style={itemPageStyles.toolbarOption}
+            style={defaultStyles.toolbarOption}
             onPress={() => handleOption("back")}
           >
             <SimpleLineIcons name="arrow-left-circle" size={30} color="black" />
           </Pressable>
           <Pressable
-            style={itemPageStyles.toolbarOption}
+            style={defaultStyles.toolbarOption}
             onPress={() => handleOption("scan")}
           >
             <MaterialCommunityIcons
@@ -197,10 +193,10 @@ export const ItemPage = ({ route, navigation }) => {
             />
           </Pressable>
           <Pressable
-            style={itemPageStyles.toolbarOption}
+            style={defaultStyles.toolbarOption}
             onPress={() => handleOption("delete")}
           >
-            <SimpleLineIcons name="settings" size={30} color="black" />
+            <SimpleLineIcons name="settings" size={30} color="darkgray" />
           </Pressable>
         </View>
         <View style={itemPageStyles.content}>
@@ -259,16 +255,12 @@ export const ItemPage = ({ route, navigation }) => {
               >
                 <Text style={defaultStyles.text}>Show Date Selector</Text>
               </Pressable>
-              {showDatePicker && (
-                <DateTimePicker
-                  display={'spinner'}
-                  testID="dateTimePicker"
-                  value={expDateNotif || new Date()}
-                  mode={'date'}
-                  is24Hour={true}
-                  onChange={onExpDateNotifChange}
-                />
-              )}
+              <CustomDatePicker
+                expiryDate={expDate}
+                notificationDate={expDateNotif}
+                setNotificationDate={setNotificationDate}
+                showDatePicker={showDatePicker}
+              />
             </View>
           </View>
           <View style={itemPageStyles.actionsContainer}>

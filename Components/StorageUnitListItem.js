@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Text, View, Pressable, StyleSheet } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import { Store } from "../Store";
 import { Entypo } from '@expo/vector-icons';
 import { storageUnitListItemStyles } from "../Styles/storageUnitListItemStyles";

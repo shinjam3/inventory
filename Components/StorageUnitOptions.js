@@ -3,13 +3,9 @@ import {
   Text,
   Modal,
   View,
-  SafeAreaView,
-  Button,
   TextInput,
   Keyboard,
-  StyleSheet,
   TouchableWithoutFeedback,
-  FlatList,
   Pressable,
   Alert,
 } from "react-native";

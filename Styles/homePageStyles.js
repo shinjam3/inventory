@@ -6,9 +6,10 @@ export const homePageStyles = StyleSheet.create({
   noUnitsText: {
     fontSize: 20,
     textAlign: "center",
+    marginBottom: 20,
   },
   flatListContainer: {
-    padding: 20,
+    padding: 10,
     flex: 1,
   },
   addButton: {

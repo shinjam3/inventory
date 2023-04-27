@@ -2,8 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const calendarStyles = {
   calendar: {
-    width: 340,
-    height: 300,
+    width: 330,
     borderWidth: 1,
     borderColor: 'black',
   },
@@ -33,30 +32,18 @@ export const calendarStyles = {
     borderColor: 'black',
   },
   week: {
-    flex: 1,
     flexDirection: 'row',
-  },
-  expiryDay: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: 'blue',
-    backgroundColor: '#AFEEEE'
-  },
-  today: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: 'blue',
-    backgroundColor: 'red'
   },
   day: {
     flex: 1,
     borderWidth: 1,
-    borderColor: 'blue'
+    borderColor: 'blue',
+    height: 35
   },
   legendContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    height: 60
+    height: 40
   },
   legendItem: {
     flexDirection: 'row',

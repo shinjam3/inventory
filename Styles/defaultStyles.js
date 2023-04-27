@@ -1,7 +1,6 @@
 import { StyleSheet, Platform, StatusBar, Dimensions } from "react-native";
 
 const fullWidth = Dimensions.get('window').width; //full width
-const fullHeight = Dimensions.get('window').height; //full height
 
 export const defaultStyles = StyleSheet.create({
   container: {
@@ -32,6 +31,7 @@ export const defaultStyles = StyleSheet.create({
     width: "100%",
   },
   contentContainer: {
+    paddingTop: 10,
     flex: 1,
     width: fullWidth,
     alignItems: "center",

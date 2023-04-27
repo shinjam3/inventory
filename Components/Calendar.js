@@ -14,8 +14,8 @@ export const Calendar = ({ expDate, referenceDay, calendarMatrix, handleDayPress
     if (
       (expiryDate.isValid() && expiryDate.isSame(day, "day")) ||
       (today.isSame(expiryDate, "day") && today.isSame(day, "day"))
-    ) return calendarStyles.expiryDay;
-    else if (today.isSame(day, "day")) return calendarStyles.today;
+    ) return {...calendarStyles.day, backgroundColor: '#AFEEEE'};
+    else if (today.isSame(day, "day")) return {...calendarStyles.day, backgroundColor: 'red'};
     else return calendarStyles.day;
   };
 
