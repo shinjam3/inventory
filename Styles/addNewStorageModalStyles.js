@@ -6,7 +6,7 @@ export const addNewStorageModalStyles = StyleSheet.create({
     top: "30%",
     alignSelf: "center",
     width: 300,
-    height: 250,
+    height: 260,
     backgroundColor: "white",
     borderRadius: 10,
     shadowColor: "#000",
@@ -19,7 +19,7 @@ export const addNewStorageModalStyles = StyleSheet.create({
     elevation: 6,
   },
   title: {
-    marginBottom: 40,
+    marginBottom: 25,
     alignSelf: "flex-start",
     fontSize: 24,
   },

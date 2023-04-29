@@ -33,6 +33,7 @@ export const ItemPage = ({ route, navigation }) => {
   const { storageUnits, setStorageUnits, currentUnit, setCurrentUnit } =
     useContext(Store);
   const [itemExists, setItemExists] = useState(false);
+  const [pageTitle, setPageTitle] = useState('');
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("1");
   const quantityInput = useRef(null);
@@ -46,13 +47,15 @@ export const ItemPage = ({ route, navigation }) => {
   
   useEffect(() => {
     if (route.params) {
-      const savedExpDate = moment(route.params.itemData.expiryDate, "MMMM Do, YYYY");
-      const savedDateNotif = moment(route.params.itemData.expiryDateNotif, "MMMM Do, YYYY");
-      setName(route.params.itemData.name);
-      setQuantity(route.params.itemData.quantity);
+      const {itemData, exists } = route.params;
+      const savedExpDate = moment(itemData.expiryDate, "MMMM Do, YYYY");
+      const savedDateNotif = moment(itemData.expiryDateNotif, "MMMM Do, YYYY");
+      setPageTitle(itemData.name);
+      setName(itemData.name);
+      setQuantity(itemData.quantity);
       setExpDate(savedExpDate.isValid() ? savedExpDate : '');
       setExpDateNotif(savedDateNotif.isValid() ? savedDateNotif.toDate() : '');
-      setItemExists(route.params.exists || false);
+      setItemExists(exists || false);
     }
   }, [route]);
 
@@ -100,8 +103,8 @@ export const ItemPage = ({ route, navigation }) => {
   };
 
   const handleSave = async () => {
-    if (!name) {
-      alert('Please enter item name before saving.');
+    if (!(name && quantity > 0)) {
+      alert('Please enter item name and quantity before saving.');
       return
     };
     const newItem = {
@@ -174,7 +177,7 @@ export const ItemPage = ({ route, navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={handleInputBlur} accessible={false}>
       <SafeAreaView style={defaultStyles.container}>
-        <Text style={defaultStyles.pageTitle}>{name || "New Item"}</Text>
+        <Text style={defaultStyles.pageTitle}>{pageTitle || "New Item"}</Text>
         <View style={{...defaultStyles.toolbar}}>
           <Pressable
             style={defaultStyles.toolbarOption}

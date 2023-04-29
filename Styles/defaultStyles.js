@@ -23,6 +23,8 @@ export const defaultStyles = StyleSheet.create({
     textShadowRadius: 10
   },
   pageTitle: {
+    paddingLeft: 5,
+    paddingRight: 5,
     marginTop: 40,
     marginBottom: 20,
     fontSize: 24,
