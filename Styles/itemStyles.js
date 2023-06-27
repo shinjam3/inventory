@@ -4,22 +4,23 @@ export const itemStyles = StyleSheet.create({
   container: {
     width: 320,
     padding: 10,
+    margin: 5,
     borderWidth: 1,
-    borderColor: '#000',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    backgroundColor: 'white'
+    borderColor: "#000",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    backgroundColor: "white",
   },
   details: {
-    flex: 4
+    flex: 4,
   },
   name: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   delete: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1
-  }
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  },
 });

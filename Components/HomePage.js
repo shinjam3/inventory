@@ -34,16 +34,28 @@ export const HomePage = ({ navigation }) => {
           dataFromDevice.forEach((unit) => {
             unit.items?.forEach((item) => {
               const expDateMoment = moment(item.expiryDate, "MMMM Do, YYYY");
-              const expDateNotifMoment = moment(item.expiryDateNotif, "MMMM Do, YYYY");
-              const datesAreValid = expDateMoment.isValid() && expDateNotifMoment.isValid();
+              const expDateNotifMoment = moment(
+                item.expiryDateNotif,
+                "MMMM Do, YYYY"
+              );
+              const datesAreValid =
+                expDateMoment.isValid() && expDateNotifMoment.isValid();
               const isBetweenNotifAndExpDate =
                 datesAreValid &&
-                moment(todaysDate).isBetween(expDateNotifMoment, expDateMoment, "day");
-              const todayNotifDate = datesAreValid && expDateNotifMoment.isSame(todaysDate, "day");
-              const todayExpDate = datesAreValid && expDateMoment.isSame(todaysDate, "day");
+                moment(todaysDate).isBetween(
+                  expDateNotifMoment,
+                  expDateMoment,
+                  "day"
+                );
+              const todayNotifDate =
+                datesAreValid && expDateNotifMoment.isSame(todaysDate, "day");
+              const todayExpDate =
+                datesAreValid && expDateMoment.isSame(todaysDate, "day");
               if (todayNotifDate || isBetweenNotifAndExpDate || todayExpDate) {
                 const daysDiff = expDateMoment.diff(todaysDate, "days");
-                const notifMsg = `${item.name} from ${unit.name} is expiring in ${daysDiff} ${
+                const notifMsg = `${item.name} from ${
+                  unit.name
+                } is expiring in ${daysDiff} ${
                   daysDiff === 1 ? "day" : "days"
                 }`;
                 notifs.push(notifMsg);
@@ -100,7 +112,11 @@ export const HomePage = ({ navigation }) => {
       <Text style={defaultStyles.appTitle}>INVENTORY</Text>
       <View style={homePageStyles.subtitleContainer}>
         <View style={homePageStyles.notificationBell}>
-          <SimpleLineIcons name="bell" size={30} onPress={() => setShowNotifs(true)} />
+          <SimpleLineIcons
+            name="bell"
+            size={30}
+            onPress={() => setShowNotifs(true)}
+          />
         </View>
         <Text style={homePageStyles.pageTitle}>Storage Units</Text>
         <View style={homePageStyles.subtitleFiller} />
@@ -108,7 +124,7 @@ export const HomePage = ({ navigation }) => {
       <View style={defaultStyles.contentContainer}>
         {storageUnits.length ? (
           // have to put FlatList container styles in a View that wraps the list
-          <View style={homePageStyles.flatListContainer}>
+          <View style={defaultStyles.flatListContainer}>
             <FlatList
               bounces={false}
               data={storageUnits}
@@ -125,17 +141,30 @@ export const HomePage = ({ navigation }) => {
         ) : (
           <Text style={homePageStyles.noUnitsText}>No storage units</Text>
         )}
-        <Pressable style={homePageStyles.addButton} onPress={() => setShowAddModal(true)}>
+        <Pressable
+          style={homePageStyles.addButton}
+          onPress={() => setShowAddModal(true)}
+        >
           <SimpleLineIcons name="plus" size={40} color="black" />
         </Pressable>
-        <CustomModal isVisible={showNotifs} closeModal={() => setShowNotifs(false)}>
+        <CustomModal
+          isVisible={showNotifs}
+          closeModal={() => setShowNotifs(false)}
+        >
           {notifications.length ? (
             <View>
-              <Text style={homePageStyles.notificationsModalTitle}>Notifications</Text>
-              <Notifications notifs={notifications} closeNotif={closeNotification} />
+              <Text style={homePageStyles.notificationsModalTitle}>
+                Notifications
+              </Text>
+              <Notifications
+                notifs={notifications}
+                closeNotif={closeNotification}
+              />
             </View>
           ) : (
-            <Text style={homePageStyles.notificationsModalTitle}>No Notifications</Text>
+            <Text style={homePageStyles.notificationsModalTitle}>
+              No Notifications
+            </Text>
           )}
         </CustomModal>
         <AddNewStorageModal

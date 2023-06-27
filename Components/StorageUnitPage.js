@@ -51,12 +51,13 @@ export const StorageUnitPage = ({ navigation }) => {
     setStorageUnits(updatedStorageUnits);
     await saveLocalData(updatedStorageUnits);
   };
-  
+
   const handleSelected = (itemData) => {
     navigation.navigate("ItemPage", {
-      itemData, exists: true
-    })
-  }
+      itemData,
+      exists: true,
+    });
+  };
 
   return (
     <SafeAreaView style={defaultStyles.container}>
@@ -85,19 +86,21 @@ export const StorageUnitPage = ({ navigation }) => {
 
       <View style={defaultStyles.contentContainer}>
         {items.length ? (
-          <FlatList
-            data={items}
-            renderItem={({ item }) => (
-              <Item
-                data={item}
-                deleteMode={deleteMode}
-                onDelete={handleDelete}
-                onSelected={handleSelected}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={storageUnitPageStyles.flatListContainer}
-          />
+          <View style={defaultStyles.flatListContainer}>
+            <FlatList
+              bounces={false}
+              data={items}
+              renderItem={({ item }) => (
+                <Item
+                  data={item}
+                  deleteMode={deleteMode}
+                  onDelete={handleDelete}
+                  onSelected={handleSelected}
+                />
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </View>
         ) : (
           <Text style={storageUnitPageStyles.noItems}>No items...</Text>
         )}

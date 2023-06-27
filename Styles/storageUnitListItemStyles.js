@@ -8,28 +8,28 @@ export const storageUnitListItemStyles = StyleSheet.create({
     width: 300,
     height: 80,
     backgroundColor: "white",
-    borderColor: 'black',
+    borderColor: "black",
     borderWidth: 1,
     padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: 5
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 5,
   },
   name: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
-    marginBottom: 5
+    marginBottom: 5,
   },
   amount: {
-    fontSize: 16
+    fontSize: 16,
   },
   options: {
-    position: 'absolute',
+    position: "absolute",
     right: 50,
     width: 150,
     height: 150,
-    borderColor: 'blue',
+    borderColor: "blue",
     borderWidth: 1,
-  }
+  },
 });
